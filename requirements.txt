@@ -1,0 +1,6 @@
+pytest~=6.2.4
+rsa~=4.7.2
+PyYAML~=5.4.1
+openpyxl~=3.0.7
+PyMySQL~=1.0.2
+requests~=2.26.0

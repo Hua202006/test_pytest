@@ -1,0 +1,3 @@
+ERROR    testcase:test_project.py:49 Recharge_会员id不存在:具体异常为assert 1001 == 1007
+  +1001
+  -1007
