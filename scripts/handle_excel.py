@@ -1,14 +1,4 @@
-# -*- coding: utf-8 -*-
-'''
-==================================================
-  @Time : 2020/5/19 18:59
-  @Auth : Hua_
-  @File : handle_excel.py
-  @IDE  : PyCharm
-  @Motto: 人生苦短，我学Python！
-  @Email: 1403589704@qq.com
-==================================================
-'''
+
 import os
 
 from openpyxl import load_workbook
