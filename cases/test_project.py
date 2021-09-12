@@ -9,19 +9,17 @@ from scripts.handle_mysql import HandleMysql
 from scripts.handle_parameterize import Parameterize, GlobalData
 import allure
 
+
+@allure.feature('api_autotest')
 class TestProject:
     do_excel = HandleExcel(do_yaml.get_data("excel", "filename"), "project")
     testcases_data = do_excel.read_excel()  # 嵌套用例对象的列表
-    
-    do_request = HandleRequest()
-
-    do_request.add_headers(do_yaml.get_data('api', 'api_version'))
 
     @allure.title("{one_testcase.name}")
     @pytest.mark.parametrize("one_testcase", testcases_data)
-    def test_project(self, one_testcase):
+    def test_project(self, one_testcase, start):
         # 创建HandleMysql对象
-        self.do_mysql = HandleMysql()
+        self.do_request, self.do_mysql = start[0], start[1]
         new_data = Parameterize.to_param(one_testcase.data)  # 将excel中读取的请求参数进行参数化
         new_url = do_yaml.get_data('api', 'base_url') + one_testcase.url
         check_sql = one_testcase.check_sql  # 从表格中获取sql语句
@@ -73,6 +71,7 @@ class TestProject:
                     setattr(GlobalData, '${loan_id}', load_id)
             self.do_excel.write_excel(one_testcase, res.text, '成功')
             print(f"用例：{one_testcase.name}---测试通过")
+
 
 if __name__ == '__main__':
     pytest.main(["-s"])

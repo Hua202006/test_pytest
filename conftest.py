@@ -8,6 +8,7 @@ from scripts.handle_mysql import HandleMysql
 from scripts.handle_parameterize import GlobalData
 from scripts.handle_request import HandleRequest
 from scripts.handle_user import generate_three_user
+from scripts.handle_yaml import do_yaml
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -25,6 +26,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 def start():
     do_log.info("开始执行用例")
     generate_three_user()
+    do_request = HandleRequest()
+
+    do_request.add_headers(do_yaml.get_data('api', 'api_version'))
     do_mysql = HandleMysql()
     # 在每条用例执行之前，获取未注册的手机号码，然后更新全局数据池
     setattr(GlobalData, "${not_existed_tel}", do_mysql.create_not_existed_mobile())
@@ -34,8 +38,8 @@ def start():
     # 创建一个不存在的loan id，并加入到全局数据池中
     setattr(GlobalData, "${not_existed_loan_id}", do_mysql.get_not_existed_loan_id())
 
+    yield do_request, do_mysql  # 后置
 
-    yield  # 后置
-    HandleRequest.close()
-    HandleMysql.close()
+    do_request.close()
+    do_mysql.close()
     do_log.info("用例执行结束")
